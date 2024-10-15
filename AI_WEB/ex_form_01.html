@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form 태그</title>
+</head>
+<body>
+    <h1> 사용자 입력 Form 태그</h1>
+    <hr>
+    <!--선 들어가는 코드 : hr-->
+    <!--
+    GET 방식으로 서버에 입력 데이터 전달
+    ex_form_01.html?msg=날씨가+좋다&pass=1234&phone=010-3333-7777&nums=55&url=http%3A%2F%2Fwww.naver.com&email=kkk%40gmail.com
+    -->
+    <form>
+        텍스트 <input type="text" name="msg" value="없음"><br>
+        비밀번호 <input type="password" name="pass" value="없음"><br>
+        전화번호 <input type="tel" name="phone" value="없음"><br>
+        숫자데이터 <input type="number" name="nums" value="0"><br>
+        웹URL <input type="url" name="url" value="없음"><br>
+        email <input type="email" name="email" value="없음"><br>
+        <input type = 'submit' value="전송">
+    </form>
+
+    <form>
+        <strong>프로그래밍 가능한 언어 선택 </strong> <br>
+        Python <input type="checkbox" name="Python"><br>
+        HTML <input type="checkbox" name="html"><br>
+        My-SQL <input type="checkbox" name="mysql"><br>
+        <!-- 라이도 버튼 : 여러 개 중에서 1개만 선택-->
+        <strong>성별 </strong> <br>
+        남 <input type="radio" name="gender" value="M"><br>
+        여 <input type="radio" name="gender" value="F"><br>
+        
+
+        <strong>연령층 </strong> <br>
+        10대 <input type="radio" name="age" value='10'><br>
+        20대 <input type="radio" name="age" value='20'><br>
+        30대 <input type="radio" name="age" value='30'><br>
+        40대 <input type="radio" name="age" value='40'><br>
+
+        <!-- 버튼 태그 -->
+        저장하시겠습니까? <input type="button" name="okbtn" value ='OK'> <br>
+
+        <!-- 색상 입력 태그-->
+        배경색 : <input type="color" name="bgcolor"><br>
+
+        <!-- 날짜 요일 입력 태그 -->
+        생년월일 : <input type="date" name="birthday"><br>
+
+        <input type = 'submit' value="전송">
+        
+
+    </form>
+
+    <form>
+        <!-- 암묵적/묵시적 방식-->
+        <label>
+            메시지 : <input type="text">
+        </label>
+
+        <!-- 명시적 방식-->
+        <label for="msg2">메시지2 : </label> 
+        <input type="text" id="msg2"><br>
+
+        <!-- 암묵적/묵시적 + 명시적     방식-->
+        <label for ='msg1'>
+            메시지 : <input type="text" id="msg1">
+        </label>
+
+
+        <input type="submit" value="'전송">
+        
+    </form>
+</body>
+</html>
