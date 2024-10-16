@@ -1,0 +1,12 @@
+body {font-family:	serif;
+    background-image: url('../D1014/images/nang2.jpg');
+    color: aliceblue;}
+h2 {color: brown;}
+em {font-size:xx-large;
+    color: red;
+
+    }
+p.first {color: green;
+        font-size:x-large;}
+p.second {color: pink;
+    font-size:xx-large;}
