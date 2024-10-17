@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS & TAG</title>
+    <style>
+        * {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #efe5d0;
+            font-family: Arial, "Trebuchet MS", sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: rgb(180, 228, 109);
+            color: #000000;
+            padding: 20px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+        }
+        nav {
+            background-color:rgba(120, 120, 118, 0.566);  
+            padding: 15px;
+            flex: 0 0 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        nav h2{
+            margin: 10px;
+            padding: 30px;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin-bottom: 50px;
+            font-size: large;
+            font-style: italic;
+
+        }
+        nav ul li a {
+            color: black;
+            text-decoration:none;
+            padding: 30px;
+            display: block;
+            border: 3px solid rgba(59, 52, 52, 0.473);
+            border-radius: 5px;
+            border-style: groove;
+        }
+        figure {
+            margin-top: auto;
+        }
+        section {
+            background-color: white;
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: rgb(243, 239, 239);
+        }
+        footer {
+            background-color:rgba(214, 66, 66, 0.715);
+            color: #efe5d0;
+            text-align: center;
+            padding: 10px;
+            font-size: 90%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>MY PROJECT</h1>
+    </header>
+    <div class="content-wrapper">
+        <nav>
+            <h2>List</h2>
+            <ul>
+                <li><a href="#ml">머신러닝</a></li>
+                <li><a href="#dl">딥러닝</a></li>
+                <li><a href="#vi">비전딥러닝</a></li>
+                <li><a href="#nlp">자연어딥러닝</a></li>
+            </ul>
+            <figure>
+                <img width="85" height="85" src="../photo/shoollogo.png" alt="KDT6" />
+                <figcaption>KDT6</figcaption>
+            </figure>
+        </nav>
+        <section>
+            <div id="ml">
+                머신러닝
+            </div>
+            <div id="dl">
+                딥러닝
+            </div>
+            <div id="vi">
+                비전
+            </div>
+            <div id="nlp">
+                자연어
+            </div>
+            <article>
+                <h2>Semantic Tags</h2>
+                <p>
+                시멘틱 요소(Semantic elements)들은 브라우저에게 요소의 의미나
+                목적을 명확하게 알려주는 요소이다.
+                </p>
+            </article>
+            <article>
+                <h2>div와 span</h2>
+                <p>
+                div은 "divide"의 약자로서 페이지를 논리적인 섹션으로 분리하는데
+                사용되는 태그이다. span 요소는 인라인 요소로서 텍스트를 위한
+                컨테이너로 사용할 수 있다.
+                </p>
+            </article>
+        </section>
+    </div>
+    <footer>MY PROJECT LIST (KDT6)</footer>
+</body>
+</html>
