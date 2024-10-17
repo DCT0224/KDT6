@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <title>여름 기온 예측</title>
+  <style>
+    body {
+      background-color: #87CEEB;  /* 하늘색 배경 */
+      color: #333;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #FF8C00;  /* 진한 주황색 */
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 80%;
+      font-size: 18px;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: rgba(255,255,255,0.8);
+    }
+    input[type="submit"] {
+      background-color: #FFD700; /* 골드 색상 */
+      color: #333;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    input[type="submit"]:hover {
+      background-color: #FFA500;
+    }
+    p {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
+ </head>
+ <body>
+  <h1>여름 기온 예측</h1>
+  <form>
+    <input type="text" name="data1" value="평균기온(°C)" placeholder="평균기온(°C)" />
+    <input type="text" name="data2" value="평균 지면온도(°C)" placeholder="평균 지면온도(°C)" />
+    <input type="text" name="data3" value="최저기온(°C)" placeholder="최저기온(°C)" />
+    <input type="text" name="data4" value="평균 이슬점온도(°C)" placeholder="평균 이슬점온도(°C)" />
+    <p><input type="submit" value="오늘 최고기온 예측!!">msg</p>
+  </form>
+ </body>
+</html>

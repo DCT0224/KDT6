@@ -59,7 +59,7 @@ class DynamicModel(nn.Module):
 # 모델 호출
 # MODEL_PATH='../Project/MyModels/'
 # MODEL_FILE = 'loss(2.01475)_score(0.73614).pth'
-MODEL_FILE = r'C:\VSCode\KDT\Torch_DL\models\weather\Reg\loss(1.52000)_score(0.88678).pth'
+MODEL_FILE = r'C:\Users\KDP-14\Desktop\VSCode\KDT6\Torch_DL\TORCH_DL_project\cgi-bin\loss(1.52000)_score(0.88678).pth'
 Weather_Model = torch.load(MODEL_FILE, weights_only=False)
 
 
@@ -161,3 +161,8 @@ if text != "":
 
 # (4) 사용자에게 WEB 화면 제공
 showHTML(text, msg)
+
+'''
+python -m http.server --cgi 8070
+
+'''
