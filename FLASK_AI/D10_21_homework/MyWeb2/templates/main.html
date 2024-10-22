@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWeb</title>
+    <!--외부 CSS 파일 설정-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+</head>
+<body>
+    <header>
+        <h1>MY PROJECT</h1>
+    </header>
+    <div class="content-wrapper">
+        <nav>
+            <h2>List</h2>
+            <ul>
+                <li><a href="#" onclick="loadPage('http://localhost:8080/cgi-bin/ML.py')">머신러닝</a></li>
+                <li><a href="#" onclick="loadPage('http://localhost:8070/cgi-bin/weather_web.py')">딥러닝</a></li>
+                <li><a href="#" onclick="loadPage('http://localhost:8060/cgi-bin/woong_traffic.py')">이미지딥러닝</a></li>
+                <li><a href="#" onclick="loadPage('http://localhost:8050/cgi-bin/WebClassifier.py')">자연어딥러닝</a></li>
+            </ul>
+            <figure>
+                <img width="85" height="85" src="../photo/shoollogo.png" alt="KDT6" />
+                <figcaption>KDT6</figcaption>
+            </figure>
+        </nav>
+        <section>
+            <iframe id="content-frame" src="about:blank"></iframe>
+        </section>
+    </div>
+    <footer> PROJECT BY 장재웅 (KDT6)</footer>
+
+    <script>
+        function loadPage(url) {
+            document.getElementById('content-frame').src = url;
+        }
+    </script>
+</body> 
+</html>

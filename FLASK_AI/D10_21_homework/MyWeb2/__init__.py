@@ -12,10 +12,15 @@ def create_app():
     # Flask Web Server 인스턴스 생성
     APP = Flask(__name__)
 
-    # 라우팅 기능 모듈 --------------------------------------------------
-    from .views import main_views
-
-    APP.register_blueprint(main_views.main_bp)
+    # 라우팅 기능 함수 --------------------------------------------------
+    # @Flask Web Server 인스턴스 생성.route('URL')
+    # http://127.0.0.1:5000/
+    @APP.route('/')
+    def index():
+        # return '''<body style='background-color:skyblue;'>
+        #             <h1>HELLO</h1>
+        #             </body>'''
+        return render_template('main.html')
     
     return APP
 
@@ -24,5 +29,3 @@ if __name__ == '__main__':
     # Flask Web Server 구동
     app=create_app()
     app.run()
-
-'''/ <-- 루트 root : SW의 시작 폴더, Linux/Mac 저장소 시작점'''
