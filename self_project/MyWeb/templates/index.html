@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이미지 분류기</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>이미지 분류기</h1>
+        <div class="upload-section">
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="file-input">
+                    <input type="file" id="image-input" name="file" accept="image/*">
+                    <button type="submit" id="upload-button">분석하기</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="preview-section">
+            <img id="image-preview" style="display: none;">
+        </div>
+        
+        <div id="result-section" style="display: none;">
+            <h2>분석 결과</h2>
+            <p id="prediction-result"></p>
+            <p id="confidence-score"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('image-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('image-preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('upload-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('image-input');
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('result-section').style.display = 'block';
+                    document.getElementById('prediction-result').textContent = 
+                        `분류 결과: ${data.prediction.class}`;
+                    document.getElementById('confidence-score').textContent = 
+                        `정확도: ${(data.prediction.confidence * 100).toFixed(2)}%`;
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('업로드 중 오류가 발생했습니다.');
+            }
+        });
+    </script>
+</body>
+</html>
