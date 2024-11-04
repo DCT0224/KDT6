@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>냉장고</title>
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .fridge-container {
+            background: linear-gradient(145deg, #ffffff, #e6e9f0);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 300px;
+            position: relative;
+        }
+
+        .fridge-handle {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            width: 20px;
+            height: 80px;
+            background: #d1d5db;
+            border-radius: 10px;
+            transform: translateY(-50%);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+            color: #34495e;
+            font-size: 16px;
+        }
+
+        strong {
+            color: #2980b9;
+        }
+
+        .back-button {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #3498db;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="fridge-container">
+        <div class="fridge-handle"></div>
+        <h1>🧊 웅이네 냉장고</h1>
+        <div class="content">
+            <p><strong>예측 과채류 : </strong> {{ predicted_class }}!!</p>
+        </div>
+        <a href="/" class="back-button">돌아가기</a>
+    </div>
+</body>
+</html>
+
