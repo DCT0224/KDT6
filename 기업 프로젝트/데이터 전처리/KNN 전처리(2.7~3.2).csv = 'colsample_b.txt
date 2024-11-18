@@ -1,0 +1,8 @@
+KNN 전처리(2.7~3.2).csv => 'colsample_bytree': 0.5, 'learning_rate': 0.1, 'max_depth': 7, 'min_child_weight': 5, 'n_estimators': 1000, 'n_thread': 4, 'random_sate': 2, 'subsample': 0.8
+
+MAE => 0.013166795049984538     MAPE => 0.43285522217637534    R2 => 0.4393732216541467
+
+'KNN 전처리(2.9~3.1).csv' =>  'colsample_bytree': 0.5, 'learning_rate': 0.1, 'max_depth': 7, 'min_child_weight': 5, 'n_estimators': 1000, 'n_thread': 4, 'random_sate': 2, 'subsample': 0.8
+
+MAE => 0.01138583316087305     MAPE => 0.3747927379798579    R2 => 0.4074683319699619
+

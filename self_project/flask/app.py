@@ -20,7 +20,7 @@ def load_model():
 
     # 저장된 모델 가중치 파일 로드
     model.load_state_dict(torch.load(
-        r'C:\Users\KDP-14\Desktop\VSCode\KDT6\self_project\flask\model_train_wb.pth',
+        r'C:\Users\KDP-14\Desktop\VSCode\LocalData\self_project\models\model_train_wb.pth',
         map_location=device  # device로 로드
     ))
     model.eval()
