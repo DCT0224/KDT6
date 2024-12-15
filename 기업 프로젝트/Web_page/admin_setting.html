@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>설정 페이지</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+<body>
+    <div class="button-container">
+        <a href="/admin/loss" class="button">누적 로스 현황</a>
+        <a href="/admin/production" class="button">고무링 생산 현황</a>
+        <a href="/admin/profit" class="button">이윤 계산</a>
+        <a href="/admin/settings" class="button">설정 세팅</a>
+        <a href="/admin" class="button">메인페이지로</a>
+    </div>
+    <h1>시스템 설정</h1>
+
+    <!-- 설정 입력 -->
+    <div class="setting-container">
+        <label for="target-production" style="font-size: 20px;">목표 생산량:</label>
+        <input type="number" id="target-production" placeholder="목표 생산량 입력" style="width: 100px; height: 40px; font-size: 20px; padding: 5px; text-align: center;">
+
+    </div>
+    <br>
+    <button class="button" onclick="saveSettings()">저장</button>
+
+    <script>
+        // 기존 설정값을 가져오기
+        document.addEventListener("DOMContentLoaded", function () {
+            $.ajax({
+                url: '/admin/settings/get', // 서버에서 저장된 설정값을 가져옴
+                method: 'GET',
+                success: function(data) {
+                    if (data.targetProduction) {
+                        document.getElementById('target-production').value = data.targetProduction;
+                    }
+                },
+                error: function() {
+                    alert('설정값을 불러오는 데 실패했습니다.');
+                }
+            });
+        });
+
+        // 설정값 저장
+        function saveSettings() {
+            const targetProduction = document.getElementById('target-production').value;
+            if (!targetProduction || targetProduction <= 0) {
+                alert('유효한 목표 생산량을 입력해주세요.');
+                return;
+            }
+
+            $.ajax({
+                url: '/admin/settings/save',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ targetProduction: targetProduction }),
+                success: function() {
+                    alert('목표 생산량이 저장되었습니다!');
+                },
+                error: function() {
+                    alert('설정값 저장에 실패했습니다.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

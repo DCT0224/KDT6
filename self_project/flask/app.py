@@ -6,6 +6,7 @@ from PIL import Image
 import torchvision.models as models
 import pymysql
 from datetime import datetime, timedelta
+import json
 
 app = Flask(__name__)
 
@@ -58,26 +59,24 @@ CLASS_NAMES = [
 ]
 
 # 데이터베이스에 예측 결과 저장
-# 데이터베이스에서 소비 기한 가져오기 및 저장
-def save_to_database(item_name):
+def save_to_database(item_name, should_save=True):
+    if not should_save:  # 저장 여부 확인
+        return
+
     try:
         connection = pymysql.connect(**db_config)
         cursor = connection.cursor()
 
-        # 소비 기한 가져오기
         query_get_period = "SELECT `소비기한 (일수)` FROM 과채류_정보_데이터셋 WHERE 식품 = %s"
         cursor.execute(query_get_period, (item_name,))
         result = cursor.fetchone()
 
         if result:
-            # 소비 기한을 사용해 권장 소비 날짜 계산
-            consumption_days = int(result[0])  # 소비 기한(일수)
+            consumption_days = int(result[0])
             recommended_date = datetime.now() + timedelta(days=consumption_days)
 
-            # 저장 방식은 기본값으로 설정
             storage_method = "냉장 보관"
 
-            # 새 데이터를 삽입
             query_insert = """
             INSERT INTO fruit_data (item_name, storage_method, consumption_period, recommended_consumption_date)
             VALUES (%s, %s, %s, %s)
@@ -91,8 +90,7 @@ def save_to_database(item_name):
         print("DB 저장 오류:", e)
     finally:
         connection.close()
-
-
+    
 
 # 메인 업로드 페이지
 @app.route('/')
@@ -100,6 +98,7 @@ def upload_page():
     return render_template('ref.html')
 
 # 이미지 예측 라우트
+@app.route('/ref/predict', methods=['POST'])
 @app.route('/ref/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:
@@ -109,44 +108,62 @@ def predict():
     image = Image.open(file).convert('RGB')
 
     try:
-        # 이미지 전처리 및 예측
         image_tensor = preprocess_image(image)
         model = load_model()
         class_idx = predict_image(image_tensor, model)
         predicted_class = CLASS_NAMES[class_idx]
 
-        # 추천 보관법 조회
         connection = pymysql.connect(**db_config)
         cursor = connection.cursor()
 
-        # 추천 보관법 가져오기
         query_storage_tip = "SELECT `추천 보관법 (상세)` FROM 과채류_정보_데이터셋 WHERE 식품 = %s"
         cursor.execute(query_storage_tip, (predicted_class,))
         storage_tip = cursor.fetchone()
         storage_tip = storage_tip[0] if storage_tip else "추천 보관법 정보가 없습니다."
 
-        # fruit_data 테이블에서 데이터 가져오기
-        query_fruit_data = "SELECT item_name, storage_method, recommended_consumption_date FROM fruit_data"
+        query_fruit_data = "SELECT id, item_name, storage_method, recommended_consumption_date FROM fruit_data"
         cursor.execute(query_fruit_data)
         fridge_data = cursor.fetchall()
 
-        # 데이터베이스 연결 종료
         connection.close()
 
-        # 예측 결과를 데이터베이스에 저장
-        save_to_database(predicted_class)
+        # 예측 시 데이터 저장
+        save_to_database(predicted_class, should_save=True)
 
-        # 결과 HTML 페이지 렌더링
         return render_template(
             'result.html',
             predicted_class=predicted_class,
             storage_tip=storage_tip,
-            fridge_data=fridge_data  # 냉장고 데이터 전달
+            fridge_data=fridge_data
         )
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/eat_item', methods=['POST'])
+def eat_item():
+    data = request.get_json()
+    item_id = data.get('id')  # Ajax로 전달된 ID
+
+    if not item_id:
+        return jsonify({'error': 'ID가 전달되지 않았습니다.'}), 400
+
+    try:
+        connection = pymysql.connect(**db_config)
+        cursor = connection.cursor()
+
+        # ID를 기반으로 데이터 삭제
+        query = "DELETE FROM fruit_data WHERE id = %s"
+        cursor.execute(query, (item_id,))
+        connection.commit()
+
+        return jsonify({'success': True, 'message': f'ID {item_id}가 삭제되었습니다.'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        connection.close()
 
 if __name__ == '__main__':
     app.run(debug=True)

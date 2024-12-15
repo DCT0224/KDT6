@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>이윤 계산</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="button-container">
+        <a href="/admin/loss" class="button">누적 로스 현황</a>
+        <a href="/admin/production" class="button">고무링 생산 현황</a>
+        <a href="/admin/profit" class="button">이윤 계산</a>
+        <a href="/admin/settings" class="button">설정 세팅</a>
+        <a href="/admin" class="button">메인페이지로</a>
+    </div>
+
+    <h1>이윤 계산</h1>
+
+    <div class="date-container">
+        <label for="start-date">시작 날짜:</label>
+        <input type="date" id="start-date">
+        <label for="end-date">종료 날짜:</label>
+        <input type="date" id="end-date">
+        <button onclick="updateProfitData()">조회</button>
+    </div>
+
+    <div class="container">
+        <!-- 왼쪽: 이윤 차트 -->
+        <div class="chart-container" style="width: 60%; float: left;">
+            <canvas id="profit-chart"></canvas>
+        </div>
+
+        <!-- 오른쪽: 이윤 테이블 -->
+        <div class="profit-table-container" style="width: 35%; float: right; padding: 10px;">
+            <h3>이윤 테이블</h3>
+            <table border="1" style="width: 100%; text-align: center;">
+                <thead>
+                    <tr>
+                        <th>가동시간</th>
+                        <th>손실 (g)</th>
+                        <th>이윤 (₩)</th>
+                    </tr>
+                </thead>
+                <tbody id="profit-data"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let profitChart;
+
+        function updateProfitData() {
+            const startDate = $('#start-date').val();
+            const endDate = $('#end-date').val();
+
+            if (!startDate || !endDate) {
+                alert('시작 날짜와 종료 날짜를 입력해주세요.');
+                return;
+            }
+
+            $.ajax({
+                url: `/admin/profit/data?start_date=${startDate}&end_date=${endDate}`,
+                method: 'GET',
+                success: function(data) {
+                    console.log("서버 응답 데이터:", data);
+
+                    if (data.length === 0) {
+                        alert("해당 날짜 범위에 데이터가 없습니다.");
+                        return;
+                    }
+
+                    const labels = [];
+                    const profits = [];
+                    let profitRow = ''; // 테이블에 표시할 최종 행 데이터
+                    let cumulativeLoss = 0; // 누적 손실 초기화
+
+                    // 가동시간 계산 기준 (첫 번째 timestamp)
+                    const startTime = new Date(data[0].timestamp).getTime() - 9 * 60 * 60 * 1000; // UTC -> KST 변환
+                    let totalOperatingMinutes = 0; // 총 가동시간 (분 단위)
+                    let previousTime = startTime;
+
+                    data.forEach((row, index) => {
+                        if (row.loss === null) return; // null 값 제외
+
+                        // UTC -> KST 변환
+                        const currentTime = new Date(row.timestamp).getTime() - 9 * 60 * 60 * 1000;
+
+                        // 차트 X축: 시간 포맷 유지
+                        const formattedDate = `${String(new Date(currentTime).getMonth() + 1).padStart(2, '0')}-${String(new Date(currentTime).getDate()).padStart(2, '0')} ${String(new Date(currentTime).getHours()).padStart(2, '0')}:${String(new Date(currentTime).getMinutes()).padStart(2, '0')}`;
+                        labels.push(formattedDate);
+
+                        // 가동시간 계산
+                        const timeDifferenceMinutes = (currentTime - previousTime) / (1000 * 60); // 분 단위
+                        if (timeDifferenceMinutes <= 5) { // 5분 이하만 가동시간으로 간주
+                            totalOperatingMinutes += timeDifferenceMinutes;
+                        }
+
+                        previousTime = currentTime; // 이전 시간 갱신
+
+                        // 누적 손실 계산
+                        cumulativeLoss += row.loss;
+                        const profit = Math.round(cumulativeLoss * 100); // 누적 손실 기반 이윤 계산
+                        profits.push(profit);
+
+                        // 테이블 데이터 준비
+                        if (index === data.length - 1) {
+                            const operatingHours = Math.floor(totalOperatingMinutes / 60); // 시간
+                            const operatingMinutes = Math.floor(totalOperatingMinutes % 60); // 분
+                            profitRow = `
+                                <tr>
+                                    <td>${operatingHours}시간 ${operatingMinutes}분</td>
+                                    <td>${cumulativeLoss.toFixed(3)} g</td>
+                                    <td>${profit} ₩</td>
+                                </tr>`;
+                        }
+                    });
+
+                    // 테이블에 최종 행 추가
+                    $('#profit-data').html(profitRow);
+
+                    // 차트 업데이트
+                    if (profitChart) {
+                        profitChart.data.labels = labels;
+                        profitChart.data.datasets[0].data = profits;
+                        profitChart.update();
+                    } else {
+                        const ctx = $('#profit-chart')[0].getContext('2d');
+                        profitChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        label: '누적 이윤 (₩)',
+                                        data: profits,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1,
+                                        pointRadius: 1,
+                                        pointHoverRadius: 4,
+                                        fill: true
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    x: { title: { display: true, text: '날짜 (MM-DD HH:mm)' }},
+                                    y: { title: { display: true, text: '누적 이윤 (₩)' }}
+                                }
+                            }
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("에러 발생:", status, error);
+                    alert('이윤 데이터를 불러오는 데 실패했습니다.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

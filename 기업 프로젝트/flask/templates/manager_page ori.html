@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon - Blog Template</title>
+    
+    <style>
+        /* styles.css */
+
+            /* 기본 설정 --------------------------------------------*/
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                color: #333;
+                background-color: #f5f5f5;
+            }
+
+            .container {
+                display: flex;
+                min-height: 100vh;
+            }
+
+            /* 로고 섹션 스타일 -----------------------------------------------*/
+            .logo-container {
+                display: flex; /* Flexbox 사용 */
+                justify-content: center; /* 수평 정렬 */
+                align-items: center; /* 수직 정렬 */
+                margin-bottom: 30px;
+                height: 100px; /* 로고 섹션 높이 설정 (필요시 조정) */
+                margin-bottom: 15px; /* 로고와 다른 요소 사이 간격 */
+            }
+
+            .logo-container img {
+                width: 400px; /* 로고 이미지 크기 */
+                width: 150%; /* 로고 크기 조정 */
+                height: auto;
+                border-radius: 50%; /* 둥근 테두리 */
+            }
+
+            /* Sidebar 스타일 ------------------------------------------- */
+            .sidebar {
+                width: 15%; /* 사이드바 너비 */
+                background-color: #222222ee;
+                color: #ffffff;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start; /* 상단 정렬 */
+                align-items: flex-start; /* 왼쪽 정렬 */
+                text-align: left; /* 텍스트 왼쪽 정렬 */
+            }
+
+            /* 제목 스타일 */
+            .sidebar h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            /* 설명 텍스트 스타일 */
+            .sidebar p {
+                font-size: 14px;
+                line-height: 1.5;
+                margin-bottom: 20px;
+            }
+
+            /* 메뉴 스타일 */
+            .sidebar .menu ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .sidebar .menu li {
+                margin-bottom: 10px;
+            }
+
+            .sidebar .menu a {
+                color: #fff;
+                text-decoration: none;
+                font-size: 16px;
+            }
+
+            .sidebar .menu a:hover {
+                text-decoration: underline;
+            }
+
+            /* 소셜 링크 스타일 */
+            .sidebar .social-links {
+                display: flex;
+                justify-content: flex-start; /* 왼쪽 정렬 */
+                gap: 10px; /* 링크 간 간격 */
+                margin-top: 20px;
+            }
+
+            .sidebar .social-links a img {
+                width: 20px;
+                height: 20px;
+            }
+
+
+            /* 홈모양 스타일 -------------------------------------------*/
+
+            .h2-container {
+                display: flex;
+                align-items: center;
+                position: relative; /* 부모 요소가 이미지를 기준으로 정렬 가능 */
+            }
+
+            .h2-container h2 {
+                margin-right: 10px; /* Adjust spacing between text and image */
+            }
+
+            .h2-container .h2-image {
+                width: 30px; /* Adjust size as needed */
+                height: 30px; /* Adjust size as needed */
+
+            }
+
+
+            .h2-container {
+                display: flex;
+                justify-content: space-between; /* 텍스트와 이미지를 양쪽으로 배치 */
+                align-items: center;
+            }
+
+            .h2-image {
+                width: 30px; /* 이미지 크기 */
+                height: auto;
+                margin-left: 10px; /* 텍스트와 간격 */
+            }
+
+            /* Main Content 스타일 -------------------------------------------*/
+            .content {
+                width: 75%;
+                padding: 20px;
+                background-color: #fff;
+            }
+
+            .post {
+                margin-bottom: 20px;
+            }
+
+            .post h2 {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+
+            .post .meta {
+                font-size: 14px;
+                color: #888;
+                margin-bottom: 10px;
+            }
+
+            .post p {
+                font-size: 16px;
+                line-height: 1.6;
+                margin-bottom: 10px;
+            }
+
+
+            /* 검은색박스 구분선 스타일 -----------------------------------------*/
+
+            .divider {
+                border: none; /* 기본 테두리 제거 */
+                border-top: 1.5px solid #676767; /* 선 색상과 두께 설정 */
+                margin: 10px 0; /* 위아래 여백 설정 */
+                width: 100%; /* 선 너비를 사이드바에 맞게 */
+            }
+    
+            /* main구분선 스타일 -----------------------------------------*/
+            .divider2 {
+                border: none; /* 기본 테두리 제거 */
+                border-top: 1.5px solid #c6c6c6; /* 선 색상과 두께 설정 */
+                margin: 10px 0; /* 위아래 여백 설정 */
+                width: 100%; /* 선 너비를 사이드바에 맞게 */
+            }
+
+
+            /* 반응형 디자인 --------------------------------*/
+            @media (max-width: 768px) {
+                .container {
+                    flex-direction: column;
+                }
+
+                .sidebar {
+                    width: 100%;
+                }
+
+                .content {
+                    width: 100%;
+                }
+            }
+
+
+
+                    /* 맨 밑ㅇㅔ 글자 --------------------------------------------------------------------*/
+        /* Footer를 화면 하단에 고정 */
+
+            footer {
+                border-top: 1px solid #000000; /* 위쪽에 얇은 선 추가 */
+                padding-top: 10px; /* 선과 내용 사이의 간격 추가 */
+                position: fixed; /* 화면 하단에 고정 */
+                bottom: 0; /* 창의 하단에 위치 */
+                left: 0; /* 왼쪽 정렬 */
+                width: 100%; /* 화면 전체 너비 */
+                display: flex; /* Flexbox 활성화 */
+                flex-direction: row; /* 가로 정렬 */
+                justify-content: center; /* 가운데 정렬 */
+                align-items: center; /* 세로축 가운데 정렬 */
+                padding: 10px 20px; /* 여백 */
+                background-color: #000000f9; /* 배경색 */
+                color: #000; /* 텍스트 색상 */
+                z-index: 1000; /* 다른 요소 위로 배치 */
+                box-sizing: border-box; /* 패딩 포함 */
+                gap: 30px; /* 두 요소 간 간격 */
+            }
+
+            
+            footer .footer-bottom {
+                display: flex; /* Flexbox 활성화 */
+                align-items: center; /* 세로축 가운데 정렬 */
+                text-align: center; /* 텍스트 가운데 정렬 */
+            }
+
+            footer .footer-bottom {
+                margin-left: 20px; /* 좌측 여백 */
+                font-size: 13px; /* 글씨 크기 */
+                color: #ffffff; /* 글씨 색상 */
+            }
+            footer a {
+                    text-decoration: none; /* 링크의 밑줄 제거 */
+            }
+            footer a img {
+                vertical-align: middle; /* 이미지가 텍스트와 수직으로 맞춰지도록 설정 */
+            }
+           
+            
+
+            /* 기본 리스트 스타일 ---------- 이거는 재웅님 일별 LOSS 버튼 */
+       
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            /* 리스트 아이템 스타일 */
+            ul > li {
+                position: relative;
+                margin-bottom: 10px;
+            }
+
+            /* 드롭다운 부모 스타일 */
+            .dropdown {
+                position: relative;
+            }
+
+            /* 드롭다운 메뉴 기본 숨김 */
+            .dropdown-menu {
+                display: none; /* 기본적으로 숨김 */
+                background-color: #00000000;
+                padding: 10px 0;
+                list-style: none;
+                margin: 0;
+                position: relative;
+            }
+
+            /* 드롭다운 메뉴 항목 스타일 */
+            .dropdown-menu li {
+                padding: 5px 20px;
+                position: relative;
+            }
+
+
+            /* 드롭다운 클릭 시 표시 */
+            .dropdown:focus-within .dropdown-menu {
+                display: block;
+            }
+
+            /* 서브 드롭다운 스타일 */
+            .sub-dropdown .date-picker {
+                display: none;
+                margin-top: 10px;
+            }
+
+            .sub-dropdown:focus-within .date-picker {
+                display: block;
+            }
+
+
+           /* 날짜 입력 칸 스타일 */
+            .date-picker input {
+                font-size: 14px; /* 글씨 크기 */
+                padding: 5px; /* 내부 여백 */
+                border: 1px solid #ccc; /* 테두리 스타일 */
+                border-radius: 3px; /* 둥근 테두리 */
+                width: 200px; /* 날짜 입력 칸의 너비 (조정 가능) */
+                max-width: 100%; /* 화면 크기에 따라 입력 칸이 줄어들 수 있도록 설정 */
+            }
+
+
+        </style>
+
+               </head>
+               <body>
+                
+                   <div class="container">
+                       <!-- Sidebar -->
+                       <aside class="sidebar">
+                           <!-- Logo Section -->
+                           <div class="logo-container">
+                               <img src=C:\Users\LG\Desktop\아오\flask\static\로고주황색그라.png alt="Logo">
+                           </div>
+                           <h1>관리자</h1>
+                           <p>MES and various solutions specialized for manufacturing sites ensure successful project performance</p>
+                            <!-- 구분선 추가 -->
+                           <hr class="divider">
+                           <nav class="menu">
+                            <ul>
+                                <li><a href="#">All Posts</a></li>
+                                <!-- 재웅 버튼 부분 -->
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" tabindex="0">일별LOSS & 생산 품질</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="sub-dropdown">
+                                            <a href="#">일별</a>
+                                            <div class="date-picker">
+                                                <form id="daily-form" action="/manager_page/Day" method="GET">
+                                                    <label for="date">날짜 선택:</label>
+                                                    <input type="date" id="date" name="date" min="2023-01-01" max="2023-12-31" required>
+                                                    <button type="submit">일별 그래프 생성</button>
+                                                </form>
+                                            </div>
+                                        </li>
+                                        <li class="sub-dropdown">
+                                            <a href="#">월별</a>
+                                            <div class="date-picker">
+                                                <form id="monthly-form" action="/manager_page/Month" method="GET">
+                                                    <label for="month">날짜 선택:</label>
+                                                    <input type="month" id="month" name="month" min="2023-01" max="2023-12" required>
+                                                    <button type="submit">월별 그래프 생성</button>
+                                                </form>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            <li><a href="#">작업자 & AI 불량 비교</a></li>
+                            <li><a href="#">모델 재학습</a></li>
+                        </ul>
+                            
+                           </nav>
+                           <!-- 구분선 추가 -->
+                           <hr class="divider">
+                           <div class="social-links">
+                                    <a href="https://facebook.com" target="_blank">
+                                        <img src= "{{url_for('static', filename='facebook.png') }}" alt="Facebook">
+                                    </a>
+                                    <a href="https://twitter.com" target="_blank">
+                                        <img src="{{url_for('static', filename='twitter X.png') }}" alt="Twitter">
+                                    </a>
+                                    <a href="https://instagram.com" target="_blank">
+                                        <img src="{{url_for('static', filename='instagram.png') }}" alt="Instagram">
+                                    </a>
+                                    <a href="https://youtube.com" target="_blank">
+                                        <img src="{{url_for('static', filename='youtube.png') }}" alt="YouTube">
+                                    </a>
+                                    <a href="https://accounts.kakao.com/" target="_blank">
+                                        <img src="{{url_for('static', filename='kakao.png') }}" alt="KakaoTalk">
+                                    </a>
+                                    <a href="https://blog.naver.com/computermate" target="_blank">
+                                        <img src="{{url_for('static', filename='naver blog.png') }}" alt="Blog">
+                                    </a>
+                                </div>
+                       </aside>
+               
+                       <!-- Main Content -->
+                    <main class="content">
+                        
+                        <article class="post">
+                            <div class="h2-container">
+                                <h2>  페이지 이름 적을까?? 아니면 그냥 빈공간? ㅎㅎ;; </h2>
+                                <a href="/target-page" class="button-link">
+                                    <img class="h2-image" src="{{url_for('static', filename='홈버튼.png') }}" alt="Example Button">
+                                </a>
+                            </div>
+                                                           
+                            <!-- 구분선 추가 -->
+                            <hr class="divider2">
+                                 <div>
+ 
+
+
+
+
+
+
+
+
+
+
+
+                          <!-- 여기 넣으세요 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!---------------------------------------------------------------->
+
+
+
+
+
+                            </div>
+                       </main>
+                   
+
+                   <footer>
+    
+       
+                 
+                    <div class="footer-bottom">
+                         © 2024 yes!mate(yi-hyun, ji-won, jae-ung, dong-gun) ♥ 이멤버리멤버 ♥
+                   </div>
+            
+            
+                    </footer>
+            
+               </body>
+               </html>

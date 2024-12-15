@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #e0f7fa;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px; 
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #00796b; 
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .file-input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            display: none;
+            border-radius: 10px;
+            border: 2px solid #00796b; 
+        }
+
+        button {
+            background-color: #00796b; 
+            color: white;
+            padding: 14px 24px; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px; 
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #004d40; 
+        }
+
+        input[type="file"] {
+            padding: 12px; 
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🥭 과채류를 보여주세요 🥝</h1>
+        <form class="upload-form" action="/ref/predict" method="post" enctype="multipart/form-data">
+            <div class="file-input-container">
+                <label for="file">사진 선택:</label>
+                <input type="file" id="file" name="file" accept="image/*" required>
+            </div>
+            <div class="preview-container">
+                <img id="imagePreview" src="#" alt="Image preview">
+            </div>
+            <button type="submit">냉장고 넣기</button>
+        </form>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+        const imagePreview = document.getElementById('imagePreview');
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.style.display = 'block';
+                    imagePreview.src = e.target.result;
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

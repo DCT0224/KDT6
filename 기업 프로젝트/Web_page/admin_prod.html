@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>누적 로스 현황 / 고무링 생산 현황</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .progress-bar {
+            width: 60%; /* 게이지 바 너비 */
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px auto; /* 위아래 여백 */
+        }
+        .progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #ff5f6d, #ffc371); /* 게이지 색상 */
+            border-radius: 15px 0 0 15px;
+            position: absolute;
+            transition: width 0.5s ease-in-out;
+        }
+        .progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .table-container {
+            margin-top: 40px; /* 게이지 바와 테이블 간격 */
+            text-align: center;
+        }
+        table {
+            width: 80%; /* 테이블 너비를 넓게 설정 */
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px; /* 셀 안쪽 여백 증가 */
+            font-size: 16px; /* 글자 크기 확대 */
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        td {
+            text-align: center;
+        }
+        .target-production {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <a href="/admin/loss" class="button">누적 로스 현황</a>
+        <a href="/admin/production" class="button">고무링 생산 현황</a>
+        <a href="/admin/profit" class="button">이윤 계산</a>
+        <a href="/admin/settings" class="button">설정 세팅</a>
+        <a href="/admin" class="button">메인페이지로</a>
+    </div>
+
+    <h1>고무링 생산 현황</h1>
+
+    <!-- 날짜 선택 -->
+    <div class="date-container">
+        <label for="prod-start-date">시작 날짜:</label>
+        <input type="date" id="prod-start-date">
+        <label for="prod-end-date">종료 날짜:</label>
+        <input type="date" id="prod-end-date">
+        <button onclick="updateProductionData()">조회</button>
+    </div>
+
+    <!-- 목표 생산량 표시 -->
+    <div class="target-production" id="target-production-display">
+        목표 생산량: 계산 중...
+    </div>
+
+    <!-- 게이지 바 -->
+    <div class="progress-bar">
+        <div class="progress-bar-inner" id="progress-bar-inner"></div>
+        <div class="progress-text" id="progress-text">0%</div>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>날짜</th>
+                    <th>생산된 고무링 개수</th>
+                </tr>
+            </thead>
+            <tbody id="production-data"></tbody>
+        </table>
+    </div>
+
+    <script>
+        let targetProduction = 1000; // 기본 목표 생산량, 서버에서 값 가져오기 전 기본값
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // 서버에서 목표 생산량 가져오기
+            $.ajax({
+                url: '/admin/settings/get', // 설정된 목표 생산량 가져오기
+                method: 'GET',
+                success: function(data) {
+                    targetProduction = data.targetProduction || 1000; // 기본값 1000
+                    document.getElementById('target-production-display').textContent = `목표 생산량: ${targetProduction}개`;
+                    updateProgressBar(0, targetProduction); // 초기화
+                },
+                error: function() {
+                    alert('목표 생산량을 불러오는 데 실패했습니다.');
+                }
+            });
+        });
+
+        function updateProductionData() {
+            const startDate = $('#prod-start-date').val();
+            const endDate = $('#prod-end-date').val();
+
+            if (!startDate || !endDate) {
+                alert('시작 날짜와 종료 날짜를 입력해주세요.');
+                return;
+            }
+
+            $.ajax({
+                url: `/admin/data?start_date=${startDate}&end_date=${endDate}&type=production`,
+                method: 'GET',
+                success: function(data) {
+                    let rows = '';
+                    let totalProduced = 0; // 총 생산량 계산
+
+                    data.forEach(row => {
+                        const formattedDate = new Date(row.date).toISOString().split('T')[0];
+                        rows += `<tr>
+                            <td>${formattedDate}</td>
+                            <td>${row.count}</td>
+                        </tr>`;
+                        totalProduced += row.count;
+                    });
+
+                    $('#production-data').html(rows);
+
+                    // 게이지 바 업데이트
+                    updateProgressBar(totalProduced, targetProduction);
+                },
+                error: function() {
+                    alert('고무링 생산 데이터를 불러오는 데 실패했습니다.');
+                }
+            });
+        }
+
+        // 게이지 바 업데이트 함수
+        function updateProgressBar(currentProduction, targetProduction) {
+            const progressBarInner = document.getElementById('progress-bar-inner');
+            const progressText = document.getElementById('progress-text');
+
+            const percentage = Math.min((currentProduction / targetProduction) * 100, 100); // 최대값 100% 제한
+            progressBarInner.style.width = `${percentage}%`; // 게이지 바 너비 조정
+            progressText.textContent = `${Math.round(percentage)}%`; // 퍼센트 텍스트 표시
+        }
+
+        // 기본 상태 초기화
+        updateProgressBar(0, targetProduction);
+    </script>
+</body>
+</html>
+
+
